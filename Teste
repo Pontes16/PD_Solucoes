@@ -1,0 +1,93 @@
+int Porta1a = 12;
+int Porta2a = 11;
+int Porta1b = 7;
+int Porta2b = 6;
+
+String master = "1234";
+String senha = "";
+String usuario = "";
+String nome1 = "";
+
+
+void setup() {                
+  Serial.begin(9600);  
+  Serial.setTimeout(100);
+  pinMode(Porta1a,OUTPUT);
+  pinMode(Porta2a,OUTPUT);
+  pinMode(Porta1b,OUTPUT);
+  pinMode(Porta2b,OUTPUT);
+}
+
+void loop() {   
+  //LEDS();
+  nomes();
+  password();
+  tipo_usuario();
+
+
+}
+
+
+void nomes(){
+  Serial.print("Digite seu nome: ");
+  delay(1000);
+  if (Serial.available() > 0) {  
+    nome1 = Serial.readStringUntil('\n');
+    Serial.println(nome1);
+    delay(1000);
+  }
+}
+
+
+void password(){
+  Serial.println("Digite a senha de 4 digitos: ");
+  delay(1000);  
+
+  if (Serial.available() > 0) {  
+    senha = Serial.readStringUntil('\n');
+    if (senha == master) {
+        digitalWrite(Porta1a,HIGH);
+    }
+     else {
+        Serial.println("SENHA ERRADA");
+        digitalWrite(Porta1a,LOW);
+    }
+
+   }
+}
+
+
+void tipo_usuario(){
+  Serial.println("Você é um administrador? ");
+  delay(1000);
+  if (Serial.available() > 0) {
+    usuario = Serial.readStringUntil('\n');
+    if (usuario == "SIM") {
+        digitalWrite(Porta2a,HIGH);
+    }
+     else {
+        digitalWrite(Porta2b,HIGH);
+    }
+  }
+  
+}
+
+
+void LEDS (){
+  digitalWrite(Porta1a, HIGH);
+  delay(200);
+  digitalWrite(Porta1a, LOW);
+  delay(200);    
+  digitalWrite(Porta2a, HIGH); 
+  delay(200);
+  digitalWrite(Porta2a, LOW);
+  delay(200);      
+  digitalWrite(Porta1b, HIGH);
+  delay(200);  
+  digitalWrite(Porta1b, LOW);
+  delay(200);   
+  digitalWrite(Porta2b, HIGH);
+  delay(200); 
+  digitalWrite(Porta2b, LOW);
+  delay(200);  
+}
