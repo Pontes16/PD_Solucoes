@@ -3,10 +3,13 @@ int Porta2a = 11;
 int Porta1b = 7;
 int Porta2b = 6;
 
+int tipo_adm;
+
 String master = "1234";
 String senha = "";
 String usuario = "";
 String nome1 = "";
+String lista ="";
 
 
 void setup() {                
@@ -18,19 +21,9 @@ void setup() {
   pinMode(Porta2b,OUTPUT);
 }
 
-void loop() {   
-  //LEDS();
-  nomes();
-  password();
-  tipo_usuario();
-
-
-}
-
-
 void nomes(){
   Serial.print("Digite seu nome: ");
-  delay(1000);
+  delay(10000);
   if (Serial.available() > 0) {  
     nome1 = Serial.readStringUntil('\n');
     Serial.println(nome1);
@@ -38,40 +31,73 @@ void nomes(){
   }
 }
 
-
-void password(){
-  Serial.println("Digite a senha de 4 digitos: ");
-  delay(1000);  
-
-  if (Serial.available() > 0) {  
-    senha = Serial.readStringUntil('\n');
-    if (senha == master) {
-        digitalWrite(Porta1a,HIGH);
-    }
-     else {
-        Serial.println("SENHA ERRADA");
-        digitalWrite(Porta1a,LOW);
-    }
-
-   }
-}
-
-
 void tipo_usuario(){
-  Serial.println("Você é um administrador? ");
-  delay(1000);
+  Serial.print("Você é um administrador? Digite 1 para SIM e 2 para NAO: ");
+  delay(10000);
   if (Serial.available() > 0) {
-    usuario = Serial.readStringUntil('\n');
-    if (usuario == "SIM") {
-        digitalWrite(Porta2a,HIGH);
-    }
-     else {
-        digitalWrite(Porta2b,HIGH);
+    int escolha = Serial.parseInt();
+    switch (escolha){
+      case 1:
+      Serial.println("SIM");
+      delay(1000);
+      break;
+  
+      case 2:
+      Serial.println("NAO");
+      delay(1000);
+      break;
     }
   }
   
 }
 
+void password(){
+  Serial.print("Digite a senha de 4 digitos: ");
+  delay(10000);  
+
+  if (Serial.available() > 0) {  
+    senha = Serial.readStringUntil('\n');
+    if (senha == master) {
+        Serial.println("SENHA CORRETA!");
+        delay(1000);
+    }
+     else {
+        Serial.println("SENHA ERRADA!");
+        delay(1000);
+    }
+   }
+}
+
+
+void imprimir(){
+
+    lista.concat(nome1+"/");
+    Serial.print("Nomes cadastrados: ");
+    Serial.println(lista);
+    delay(1000);
+}
+
+
+void sala(){
+  Serial.print("Escolha a sala (Digite 1 ou 2) ");
+  delay(7000);
+  if (Serial.available() > 0) {
+    int escolha_sala = Serial.parseInt();
+    switch (escolha_sala){
+      case 1:
+      Serial.println("Sala escolhida: 1");
+      digitalWrite(Porta1a,HIGH);
+      delay(5000);
+      break;
+  
+      case 2:
+      Serial.println("Sala escolhida: 2");
+      digitalWrite(Porta1b,HIGH);
+      delay(5000);
+      break;
+    }
+  }
+}
 
 void LEDS (){
   digitalWrite(Porta1a, HIGH);
@@ -90,4 +116,14 @@ void LEDS (){
   delay(200); 
   digitalWrite(Porta2b, LOW);
   delay(200);  
+}
+
+void loop() {   
+  //LEDS();
+  //Serial.println("Bem vindo ");
+  password();                     //Funcao de senha
+  nomes();                        //Funcao de lista de nomes cadastrados
+  tipo_usuario();                 //Funcao se é adm ou nao
+  imprimir();                     //Funcao para imprimir os nomes cadastrados
+  sala();                         //Funcao para verificar a sala escolhida 
 }
